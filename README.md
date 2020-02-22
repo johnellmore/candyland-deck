@@ -4,9 +4,8 @@ This is a dead-simple replacement for the deck of cards in Candyland. My oldest 
 
 ## Usage
 
-1. Download the "candyland-deck.html" file.
-2. Open it directly in your browser (no need to host it).
-3. The first card will already be drawn and displayed. Press spacebar to draw another card.
+1. Visit [https://johnellmore.github.io/candyland-deck](https://johnellmore.github.io/candyland-deck), **OR**, download the "index.html" file and open it directly in your browser (no need to host it).
+2. The first card will already be drawn and displayed. Press spacebar to draw another card.
 
 ## Notes
 
