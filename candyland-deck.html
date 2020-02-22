@@ -1,0 +1,180 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Candyland card deck</title>
+        <script type="text/javascript">
+            const originalDeck = [
+                ...Array(4).fill('square-yellow'),
+                ...Array(3).fill('double-square-yellow'),
+                ...Array(4).fill('square-red'),
+                ...Array(3).fill('double-square-red'),
+                ...Array(4).fill('square-purple'),
+                ...Array(3).fill('double-square-purple'),
+                ...Array(4).fill('square-orange'),
+                ...Array(3).fill('double-square-orange'),
+                ...Array(4).fill('square-blue'),
+                ...Array(3).fill('double-square-blue'),
+                ...Array(4).fill('square-green'),
+                ...Array(3).fill('double-square-green'),
+                'icecream',
+                'peppermint',
+                'lollipop',
+                'peanut',
+            ];
+
+            let deck = [];
+
+            function shuffleFisherYates(array) {
+                let i = array.length;
+                while (i--) {
+                    const ri = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[ri]] = [array[ri], array[i]];
+                }
+                return array;
+            }
+
+            function reshuffle() {
+                console.log('reshuffling...');
+                deck = shuffleFisherYates([...originalDeck]);
+            }
+
+            function draw() {
+                const cardEl = document.querySelector('.card');
+                cardEl.className = 'card'; // clear the last displayed card
+
+                // draw a new card (and remove it from the deck)
+                const newCard = deck.shift();
+
+                // display that card
+                cardEl.classList.add(newCard);
+
+                // reshuffle the deck if we just ran out of cards
+                if (deck.length === 0) {
+                    reshuffle();
+                }
+            }
+
+            function cheatBadly() {
+                // a "bad" card is considered a single colored square
+                const isBadCard = card => card.startsWith('square-');
+
+                // if no bad cards are left, let's not mess anything up here
+                if (!deck.find(isBadCard)) {
+                    console.log('no "bad" cards remaining in deck!');
+                    return;
+                }
+
+                // shuffle the deck over and over again until we get a bad card first
+                // (obviously a naive way to do this, but it's simple to implement)
+                while (!isBadCard(deck[0])) {
+                    shuffleFisherYates(deck);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                reshuffle();
+                draw();
+                
+                document.querySelector('#action-reshuffle').addEventListener('click', function () {
+                    reshuffle();
+                    draw();
+                    this.blur();
+                });
+
+                document.querySelector('#action-help').addEventListener('click', function () {
+                    cheatBadly();
+                    this.blur();
+                });
+
+                document.querySelector('#action-draw').addEventListener('click', function () {
+                    draw();
+                    this.blur();
+                });
+            });
+            
+            document.addEventListener('keyup', function (e) {
+                if (e.code === 'Space') {
+                    draw();
+                }
+            });
+        </script>
+        <style type="text/css">
+            html {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 24px;
+            }
+            
+            body {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .controls {
+                flex: 0 0 auto;
+                display: flex;
+                margin: 0.5em 1em 0 0.5em;
+                align-items: baseline;
+            }
+
+            .controls .spacer {
+                flex: 1 0 auto;
+            }
+
+            button {
+                font-family: inherit;
+                font-size: 1em;
+                margin: 0.5em;
+            }
+
+            .card {
+                flex: 1 1 auto;
+                font-size: 50vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .card[class*='square-'] {
+                font-size: 1em;
+            }
+
+            .card[class*='square-']::before {
+                content: " ";
+                height: 40vh;
+                width: 40vh;
+                margin: 1em;
+                background-color: var(--space-color);
+            }
+            
+            .card[class*='double-square-']::after {
+                content: " ";
+                height: 40vh;
+                width: 40vh;
+                margin: 1em;
+                background-color: var(--space-color);
+            }
+
+            .card.icecream::before      { content: "🍨"; }
+            .card.peppermint::before    { content: "🍬"; }
+            .card.lollipop::before      { content: "🍭"; }
+            .card.peanut::before        { content: "🥜"; }
+            .card[class*='-yellow'] { --space-color: yellow; }
+            .card[class*='-red']    { --space-color: red; }
+            .card[class*='-purple'] { --space-color: purple; }
+            .card[class*='-orange'] { --space-color: orange; }
+            .card[class*='-blue']   { --space-color: blue; }
+            .card[class*='-green']  { --space-color: green; }
+        </style>
+    </head>
+    <body>
+        <div class="controls">
+            <button id="action-reshuffle">Reshuffle</button>
+            <button id="action-help">Help</button>
+            <span class="spacer"></span>
+            <button id="action-draw">Draw (spacebar)</button>
+        </div>
+        <div class="card"></div>
+    </body>
+</html>
